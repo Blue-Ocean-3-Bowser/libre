@@ -23,7 +23,7 @@ const Calendar = () => {
     <div className={styles.calendar} id="calendar">
       <h2>CALENDAR HERE</h2>
       <div className={styles.calendarMain}>
-        <NewEventForm isOpen={isFormOpen} onClose={onFormClose}/>
+        <NewEventForm isOpen={isFormOpen} onClose={onFormClose} />
         <EventDetails isOpen={isDetailOpen} onClose={onDetailClose}/>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

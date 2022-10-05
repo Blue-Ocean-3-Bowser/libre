@@ -13,15 +13,27 @@
   width: 80%;
 }
 
-#newEventForm {
-  display: flex;
-  flex-direction: column;
+.input {
+  outline: 1px solid gray;
+  margin: 0.25rem 0;
+  width: 100%;
 }
 
-input {
-  border: solid gray 1px;
+.button {
+  color: white;
+  font-weight: 900;
+  background-color: var(--color-orange);
+  border-radius: 5px;
+  padding: 0.25rem 1.25rem;
+  margin: 1.5rem 0.3rem 1rem 0.3rem;
+  text-transform: uppercase;
 }
 
-.description {
-  height: 50px;
+.cancel {
+  background-color: var(--color-dark-gray) !important;
 }
+
+/* #newEventForm {
+
+} */
+
