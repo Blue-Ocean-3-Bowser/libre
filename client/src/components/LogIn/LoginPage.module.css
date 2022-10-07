@@ -26,6 +26,7 @@
 .h1 {
   /* background-color: var(--color-orange); */
   /* color: white; */
+  opacity: 0.75;
   color: var(--color-orange);
   font-weight: 700;
   font-size: 10rem;
@@ -33,6 +34,8 @@
 }
 
 .h3 {
+  color: var(---color-dark);
+  opacity: 0.85;
   font-weight: 700;
   font-size: 3rem;
   line-height: 3rem;
@@ -43,11 +46,12 @@
 }
 
 .canvas {
+  background-color: var(--color-orange);
   width: 100%;
 }
 
 .canvasContainer {
-  clip-path: polygon(0 0, 100% 0, 100% 10%, 0 50%);
+  clip-path: polygon(0 0, 100% 0, 100% 18%, 0 50%);
   position: absolute;
   inset: 0;
   height: 100%;

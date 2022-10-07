@@ -2,11 +2,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #CCC5B9;
+  background-color: #fffcf2;
   grid-area: calendar;
   text-align: center;
   height: 100vh;
   flex-direction: column;
+}
+
+.displayName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  /* text-transform: uppercase;
+  margin-bottom: 3%; */
 }
 
 .calendarMain{
@@ -31,6 +38,12 @@
 
 .cancel {
   background-color: var(--color-dark-gray) !important;
+}
+
+.fc-timeGridWeek-button, .fc-timeGridDay-button, .fc-timeGridMonth-button,
+.fc-today-button, .fc-prev-button, .fc-next-button {
+  border: 3px solid var(--color-orange) !important;
+  background-color: var(--color-orange) !important;
 }
 
 /* #newEventForm {

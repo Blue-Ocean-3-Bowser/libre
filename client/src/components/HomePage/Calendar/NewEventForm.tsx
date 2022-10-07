@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {
+  Avatar,
+  AvatarBadge,
+  AvatarGroup,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -19,6 +22,13 @@ import {
   Flex,
   FormErrorMessage,
 } from '@chakra-ui/react';
+import { MultiSelect } from 'chakra-multiselect';
+import {
+  AsyncCreatableSelect,
+  AsyncSelect,
+  CreatableSelect,
+  Select,
+} from "chakra-react-select";
 import {
   doc, setDoc, addDoc, getDoc, collection, writeBatch
 } from "firebase/firestore";
@@ -27,6 +37,7 @@ import styles from './Calendar.module.css';
 import { computeSegDraggable } from "@fullcalendar/react";
 import { resolve } from "path";
 import { addListener } from "process";
+import { getEvents, getToken } from '../../Utilities/http';
 import axios from "axios";
 import { format, parseISO } from 'date-fns';
 
@@ -45,13 +56,21 @@ const NewEventForm = ({isOpen, onClose, currUser}) => {
 
   function onSubmit(values) {
 
-    let { attendees, startTime, endTime, location, name, description } = values;
-    const attendeesArray = attendees.split(',')
+    let { startTime, endTime, location, description, name } = values;
+    let attendeesArray = Object.values(selectedOptions).map((attendee) => {
+      return attendee.value;
+    });
+    attendeesArray.push(currUser.email);
 
+    // const attendeesArray = attendees.split(',');
     startTime = format(parseISO(startTime), "yyyy-MM-dd'T'hh:mm:ss");
     endTime = format(parseISO(endTime), "yyyy-MM-dd'T'hh:mm:ss");
 
+    console.log("selected options... ", Object.values(selectedOptions));
+    console.log('attendees array... ', attendeesArray);
+
     const url = `https://www.googleapis.com/calendar/v3/calendars/${currUser.email}/events`;
+
     const requestBody = {
       "end": {
         "dateTime": endTime,
@@ -68,6 +87,7 @@ const NewEventForm = ({isOpen, onClose, currUser}) => {
       "summary": name,
       // "iCalUID": "64kebt4dy284mtdekuqn"
     };
+
     const requestConfig = {
       headers: {
         'Authorization': `Bearer ${currUser.oauthAccessToken}`
@@ -95,12 +115,10 @@ const NewEventForm = ({isOpen, onClose, currUser}) => {
           })
         }
       })
-
       // save calendar event into user's Google Calendar
       .then(() => {
         return axios.post(url, requestBody, requestConfig);
       })
-
       .then(() => {
         onClose();
         alert("Your event has been created!");
@@ -111,6 +129,41 @@ const NewEventForm = ({isOpen, onClose, currUser}) => {
       })
 
   }
+
+  const [friends, setFriends] = useState([]);
+  const [attendeesFormInput, setAttendeesFromInput] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  // const [value, setValue] = useState([]);
+
+  let attendeesArr = [];
+
+  // let sample = ["nicolastiennguyen@gmail.com", "qingzhouyan@gmail.com", "hepner.thomas2@gmail.com", "james.emerson.vo.2503@gmail.com", "kathryn.kuroko@gmail.com"];
+
+  useEffect(() => {
+    let hold = [];
+    attendeesArr = [];
+    currUser.friends.map((friend, i) => {
+      attendeesArr.push({ value: friend, label: friend });
+      getDoc(doc(db, "users", friend))
+        .then((res) => {
+          const friend = res.data();
+          getToken(friend.refreshToken)
+            .then((res) => {
+              friend.oauthAccessToken = res;
+            })
+          hold.push(friend);
+          // console.log(hold);
+          if (hold.length === currUser.friends.length) {
+            setFriends(hold)
+          }
+        })
+        .catch((err) => console.log(err))
+    })
+    setAttendeesFromInput(attendeesArr);
+    // console.log('attendeesArr....', attendeesArr);
+  }, [currUser]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -141,16 +194,39 @@ const NewEventForm = ({isOpen, onClose, currUser}) => {
                 <FormLabel htmlFor='attendees'>
                   Attendees *
                 </FormLabel>
-                <Input
+                <FormLabel htmlFor='attendees-avatars'>
+                <AvatarGroup size='md' max={2}>
+                    {
+                      friends.map((friend, index) =>
+                        <Avatar name={friend.displayName} src={friend.photoUrl} key={index}/>
+                      )
+                    }
+                  </AvatarGroup>
+                </FormLabel>
+                <Select
+                  isMulti
+                  id="attendees"
+                  onChange={setSelectedOptions}
+                  options={attendeesFormInput}
+                  placeholder="Invite your friends."
+                  closeMenuOnSelect={false}
+                  hasStickyGroupHeaders
+                />
+                {/* <MultiSelect
+                  options={sample}
+                  value={value}
+                  onChange={setValue}
+                /> */}
+                {/* <Input
                   id='attendees'
-                  placeholder='who will be attending the event'
+                  placeholder='Who will be attending the event'
                   {...register('attendees', {
                     required: 'This is required',
                   })}
                   type='email'
                   multiple
                   required
-                />
+                /> */}
                 <FormErrorMessage>
                   {errors.eventName && errors.eventName.message}
                 </FormErrorMessage>

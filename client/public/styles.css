@@ -29,6 +29,18 @@ p, h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
 
+.fc-timeGridWeek-button, .fc-timeGridDay-button, .fc-dayGridMonth-button,
+.fc-today-button, .fc-prev-button, .fc-next-button {
+  border: 3px solid var(--color-orange) !important;
+  background-color: var(--color-orange) !important;
+}
+
+.fc-button-active {
+  font-weight: 700 !important;
+  border: 3px solid var(--color-dark) !important;
+  background-color: var(--color-dark) !important;
+}
+
 #root, #__next {
   isolation: isolate;
 }

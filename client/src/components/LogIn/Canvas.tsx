@@ -35,10 +35,9 @@ const Canvas = () => {
           col(x, y, R(x,y,t), G(x,y,t), B(x,y,t));
         }
       }
-      t = t + 0.07;
+      t = t + 0.017;
       window.requestAnimationFrame(run);
     }
-
     run();
   });
 
