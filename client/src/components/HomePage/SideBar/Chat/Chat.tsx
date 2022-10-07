@@ -97,7 +97,7 @@ function ChatRoom(props) {
 
   return(
     <>
-      <div>
+      <div className='floating-chat'>
         <div>
           {messages && messages.map((msg, index) => {
           return <ChatMessage
