@@ -43,6 +43,7 @@ const FriendEntry = (props) => {
             signin({...userData.data()});
           })
       })
+    removeAttendee(friend);
   }
 
   return (

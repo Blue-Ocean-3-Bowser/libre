@@ -12,9 +12,6 @@ const FriendsList = (props) => {
   const [allFriends, setAllFriends] = useState([]);
   const [friends, setFriends] = useState([]);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef()
-
   const { currUser, attendees, addAttendee, removeAttendee, setChatWith} = props;
 
   useEffect(() => {
@@ -40,6 +37,8 @@ const FriendsList = (props) => {
 
     setFriends(searched);
   }
+
+  console.log('FIRNEDS LIST', friends);
 
   return (
     <div className={styles.friendsList}>
