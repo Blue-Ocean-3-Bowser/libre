@@ -15,7 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../../../../../configs/config";
 import { signin } from "../../../../redux/actions/currUser";
@@ -29,7 +30,7 @@ const FriendEntry = (props) => {
 
   const handleClick = () => {
     setClicked(!clicked);
-    clicked ? removeAttendee(friend) :addAttendee(friend);
+    clicked ? removeAttendee(friend) : addAttendee(friend);
   }
 
   const handleDelete = () => {

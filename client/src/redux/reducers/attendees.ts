@@ -1,4 +1,4 @@
-import { ADDATTENDEE, REMOVEATTENDEE } from "../constant";
+import { ADDATTENDEE, REMOVEATTENDEE, REMOVEALLATTENDEE } from "../constant";
 
 const initState = []
 export default function attendeesReducer(prevState = initState, action) {
@@ -10,6 +10,8 @@ export default function attendeesReducer(prevState = initState, action) {
     case REMOVEATTENDEE:
       const attendees = prevState.filter(attendee => attendee.email !== data.email)
       return attendees
+    case REMOVEALLATTENDEE:
+      return []
     default:
       return prevState
   }

@@ -1,4 +1,4 @@
-import { getDoc, updateDoc, doc } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, getDocFromCache } from 'firebase/firestore';
 import { db } from '../../../../../../configs/config';
 import React, { useState, useEffect } from 'react';
 import styles from './Notification.module.css';
@@ -10,11 +10,14 @@ import { signin } from '../../../../redux/actions/currUser';
 import { connect } from 'react-redux';
 
 const Notification = (props) => {
+<<<<<<< HEAD
   const { signin, currUser, document, currEvent, getAllDocs, currPhoto } = props;
   const { email, oauthAccessToken } = currUser;
+=======
+  const { signin, currUser, document, currEvent, getAllDocs, currPhoto } = props
+>>>>>>> 81cd9e9a6dc73af32c728ba3865e49426765f9c3
   const { senderDisplayName, senderEmail, type, eventName, id } = document
-
-  console.log(currEvent)
+  const { email, oauthAccessToken } = currUser;
 
   const acceptRequest = () => {
     const docRef = doc(db, 'notifications', id)
@@ -24,7 +27,11 @@ const Notification = (props) => {
     updateDoc(docRef, data)
       .then(() => {
         console.log('accept event successful')
-        getAllDocs()
+        getAllDocs();
+        getDoc(doc(db, "users", currUser.email))
+          .then((userData) => {
+            signin({...userData.data()});
+          })
       })
       .catch((err) => {
         console.log('did not update :', err)
