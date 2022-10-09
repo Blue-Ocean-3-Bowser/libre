@@ -4,17 +4,16 @@ import { Button, HStack, useDisclosure, VStack } from '@chakra-ui/react'
 import styles from './../Sidebar.module.css'
 import FriendEntry from './FriendEntry';
 import { connect } from 'react-redux';
-import { doc, setDoc, getDoc, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, onSnapshot } from "firebase/firestore";
 import { db } from '../../../../../../configs/config';
 import AddFriend from './AddFriend';
 import { getDatabase, ref, onValue} from "firebase/database";
 import { signin } from '../../../../redux/actions/currUser';
-// var firebase = require('firebase/app');
 
 const FriendsList = (props) => {
   const [allFriends, setAllFriends] = useState([]);
   const [friends, setFriends] = useState([]);
-
+  const [status, setStatus] = useState<{}|null>(null);
   const { signin, currUser, attendees, addAttendee, removeAttendee, setChatWith} = props;
 
   useEffect(() => {
@@ -31,18 +30,28 @@ const FriendsList = (props) => {
         })
         .catch((err) => console.log(err))
     })
-
-    // var ref = firebase.database().ref("users");
-    // firebase.database().ref().on('value', function(snapshot) {
-    //   const data = snapshot.val();
-    //   console.log('FIREBASE', data);
-    //   getDoc(doc(db, "users", currUser.email))
-    //     .then((userData) => {
-    //       signin({...userData.data()});
-    //     })
-    // });
-
   }, [currUser.friends])
+
+  useEffect(() => {
+      const unsubscribe = onSnapshot(doc(db, "users", currUser.email), (doc) => {
+        console.log('setting status trigger by db change')
+        setStatus(doc.data());
+      });
+
+      return () => {
+        unsubscribe();
+      }
+  }, [])
+
+  useEffect(() => {
+    if (status) {
+      signin({...status});
+    }
+    console.log('sign in trigger by status change', status)
+
+  }, [status])
+
+
 
   const handleSearch = (e) => {
     let searched = allFriends.filter(({ displayName }) => {
