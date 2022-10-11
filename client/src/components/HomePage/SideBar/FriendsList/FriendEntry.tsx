@@ -39,6 +39,11 @@ const FriendEntry = (props) => {
     currUser.friends = deletedFriends;
     setDoc(doc(db, "users", currUser.email), currUser)
       .then(() => {
+        let deletedFriends = friend.friends.filter((fren) => fren !== currUser.email);
+        friend.friends = deletedFriends;
+        setDoc(doc(db, "users", friend.email), friend)
+      })
+      .then(() => {
         getDoc(doc(db, "users", currUser.email))
           .then((userData) => {
             signin({...userData.data()});

@@ -10,7 +10,7 @@ import { signin } from '../../../../redux/actions/currUser';
 import { connect } from 'react-redux';
 
 const Notification = (props) => {
-  const { signin, currUser, document, currEvent, getAllDocs, currPhoto } = props
+  const { signin, currUser, document, currEvent, getAllDocs, currPhoto } = props;
   const { senderDisplayName, senderEmail, type, eventName, id } = document
   const { email, oauthAccessToken } = currUser;
 
@@ -39,6 +39,10 @@ const Notification = (props) => {
           const friends = userData.data().friends.slice()
           friends.push(document.senderEmail)
           updateDoc(userRef, { friends: friends })
+          getDoc(doc(db, "users", currUser.email))
+          .then((userData) => {
+            signin({...userData.data()});
+          })
         })
         .catch(err => console.log(err))
       const senderRef = doc(db, 'users', senderEmail)
@@ -86,11 +90,11 @@ const Notification = (props) => {
     updateDoc(docRef, data)
       .then(() => {
         console.log('decline event request successful')
-        getAllDocs()
+        getAllDocs();
       })
-      .catch((err) => {
-        console.log('did not update:', err)
-      })
+        .catch((err) => {
+          console.log('did not update:', err)
+        })
   }
 
   return (

@@ -24,7 +24,6 @@ const AddFriend = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const input:any = document.getElementById('add-email');
-    console.log('INPUT', input.value)
     addDoc(collection(db, "notifications"), {
       receiverEmail: input.value,
       senderDisplayName: currUser.displayName,
